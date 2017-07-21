@@ -1,0 +1,6 @@
+xmltodict==0.10.2
+flake8==3.3.0
+pytest==3.0.7
+python_swiftclient==3.2.0
+python-keystoneclient==3.8.0
+psycopg2==2.6.2
