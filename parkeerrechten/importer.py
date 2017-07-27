@@ -132,4 +132,3 @@ def check_import():
     cur.close()
     conn.close()
     print('Import successfull')
-    
