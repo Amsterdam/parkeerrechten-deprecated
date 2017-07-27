@@ -3,7 +3,6 @@
 """
 
 from parkeerrechten import objectstore, settings
-import subprocess
 import psycopg2
 import zipfile
 import os
@@ -133,5 +132,4 @@ def check_import():
     cur.close()
     conn.close()
     print('Import successfull')
-
-
+    

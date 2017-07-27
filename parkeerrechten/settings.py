@@ -52,22 +52,22 @@ def get_database_key():
 
 DATABASE_OPTIONS = {
     Location_key.docker: {
-        'NAME': os.getenv('DATABASE_NAME', 'parkeerrechten'),
-        'USER': os.getenv('DATABASE_USER', 'parkeerrechten'),
+        'NAME': os.getenv('DATABASE_NAME', 'parkeerrecht'),
+        'USER': os.getenv('DATABASE_USER', 'parkeerrecht'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': 'database',
         'PORT': '5432'
     },
     Location_key.local: {
-        'NAME': os.getenv('DATABASE_NAME', 'parkeerrechten'),
-        'USER': os.getenv('DATABASE_USER', 'parkeerrechten'),
+        'NAME': os.getenv('DATABASE_NAME', 'parkeerrecht'),
+        'USER': os.getenv('DATABASE_USER', 'parkeerrecht'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': get_docker_host(),
         'PORT': '5420'
     },
     Location_key.override: {
-        'NAME': os.getenv('DATABASE_NAME', 'parkeerrechten'),
-        'USER': os.getenv('DATABASE_USER', 'parkeerrechten'),
+        'NAME': os.getenv('DATABASE_NAME', 'parkeerrecht'),
+        'USER': os.getenv('DATABASE_USER', 'parkeerrecht'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', 'insecure'),
         'HOST': os.getenv(OVERRIDE_HOST_ENV_VAR),
         'PORT': os.getenv(OVERRIDE_PORT_ENV_VAR, '5432')

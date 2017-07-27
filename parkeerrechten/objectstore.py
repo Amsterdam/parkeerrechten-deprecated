@@ -43,7 +43,7 @@ def copy_file_from_objectstore(container, file_name, download_dir):
     return destination
 
 
-def fetch_import_file_names(container, folder = None):
+def fetch_import_file_names(container, folder=None):
     files = []
     for file_object in _get_full_container_list(container, prefix=folder):
         if file_object['content_type'] != 'application/directory':
