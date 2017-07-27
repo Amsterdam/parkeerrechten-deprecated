@@ -19,7 +19,7 @@ dc up -d --build database
 sleep 20
 
 # Load data from NPR Database, save in /tmp/parkeererechten/export/output.csv
-docker-compose -p parkeerrechten run --rm sqlserverimporter db2csv \
+docker-compose -p parkeerrechten -f ${DIR}/docker-compose.yml run --rm sqlserverimporter db2csv \
         -debug \
         -server ljccjhajab.database.windows.net\
         -user usr_0363  \
