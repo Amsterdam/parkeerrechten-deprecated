@@ -23,7 +23,7 @@ services:
     command: make runimport
 
   sqlserverimporter:
-    build: ./sqlserverimporter/
+    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${ENVIRONMENT}
     volumes:
       - /tmp/parkeerrechten/export:/tmp/export
 
