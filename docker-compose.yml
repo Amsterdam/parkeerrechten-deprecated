@@ -22,6 +22,11 @@ services:
       DATABASE_PORT_OVERRIDE: 5432
     command: make runimport
 
+  sqlserverimporter:
+    build: ./sqlserverimporter/
+    volumes:
+      - /tmp/parkeerrechten/export:/tmp/export
+
   app:
     build:
       context: .
