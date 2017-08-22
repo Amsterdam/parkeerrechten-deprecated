@@ -28,4 +28,8 @@ COPY app /app
 COPY Makefile flake.cfg /app/
 COPY --from=gobuilder /go/src/db2csv /bin/db2csv
 
+# Do the .jenkins directory dance to enable data imports:
+COPY .jenkins/import /.jenkins-import/
+
+
 USER datapunt

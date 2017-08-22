@@ -1,0 +1,40 @@
+version: "3.0"
+services:
+  database:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    ports:
+      - "5443:5432"
+    environment:
+      POSTGRES_DB: parkeerrechten
+      POSTGRES_USER: parkeerrechten
+      POSTGRES_PASSWORD: insecure
+
+  importer:
+    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
+    links:
+      - database
+    environment:
+#      PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
+      DATABASE_NAME: parkeerrechten
+      DATABASE_USER: parkeerrechten
+      DATABASE_PASSWORD: insecure
+      DATABASE_HOST_OVERRIDE: database
+      DATABASE_PORT_OVERRIDE: 5432
+    volumes:
+      - /tmp/parkeerrechten/export:/tmp/export
+    command: make runimport
+
+  db-backup:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    links:
+      - database:db
+    volumes:
+      - ./backups:/tmp/backups
+    command: >
+      bash -c "echo db:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass \
+              && chmod 600 ~/.pgpass \
+              && pg_dump --clean \
+                          -Fc \
+                          -U parkeerrechten \
+                          -h db -p 5432 \
+                          parkeerrechten > /tmp/backups/database.dump"
