@@ -17,12 +17,8 @@ WORKDIR /app
 COPY requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY parkeerrechten /app/parkeerrechten
-COPY sqlserverimporter /app/sqlserverimporter
-COPY tests /app/tests
-COPY import.sh flake.cfg tests Makefile docker-compose.yml /app/
+COPY app /app
+# ADAPT: COPY import.sh flake.cfg tests Makefile docker-compose.yml /app/
+COPY Makefile flake.cfg /app/
 
 USER datapunt
-
-#CMD uwsgi
-

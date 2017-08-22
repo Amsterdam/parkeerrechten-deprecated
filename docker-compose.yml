@@ -29,8 +29,8 @@ services:
 
   app:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./parkeerrechten
+      dockerfile: .parkeerrechten/Dockerfile
     links:
       - database
     environment:

@@ -16,6 +16,7 @@ def run_import():
     create_table()
     for file in objectstore.fetch_import_file_names(container):
         retrieve_from_objectstore_and_import(file)
+        break
     check_import()
 
 
@@ -125,6 +126,9 @@ def check_import():
 
     cur.execute('SELECT count(*) FROM "parkeerrecht_2016_raw";')
     result = cur.fetchone()
+    print('There are {} records.'.format(result[0]))
+    return
+
     million = 1000000
     if result[0] < 20 * million:
         raise Exception("Too little records in database, import failed.")
