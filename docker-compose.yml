@@ -30,7 +30,7 @@ services:
   app:
     build:
       context: ./parkeerrechten
-      dockerfile: .parkeerrechten/Dockerfile
+      dockerfile: /Dockerfile
     links:
       - database
     environment:
