@@ -5,8 +5,8 @@ services:
     ports:
       - "5443:5432"
     environment:
-      POSTGRES_DB: parkeerrecht
-      POSTGRES_USER: parkeerrecht
+      POSTGRES_DB: parkeerrechten
+      POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
 
   importer:
@@ -15,8 +15,8 @@ services:
       - database
     environment:
       PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
-      DATABASE_NAME: parkeerrecht
-      DATABASE_USER: parkeerrecht
+      DATABASE_NAME: parkeerrechten
+      DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
       DATABASE_HOST_OVERRIDE: database
       DATABASE_PORT_OVERRIDE: 5432
@@ -35,8 +35,8 @@ services:
       - database
     environment:
       PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
-      DATABASE_NAME: parkeerrecht
-      DATABASE_USER: parkeerrecht
+      DATABASE_NAME: parkeerrechten
+      DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
       DATABASE_HOST_OVERRIDE: database
       DATABASE_PORT_OVERRIDE: 5432
@@ -48,10 +48,10 @@ services:
     volumes:
       - ./backups:/tmp/backups
     command: >
-      bash -c "echo db:5432:parkeerrecht:parkeerrecht:insecure > ~/.pgpass \
+      bash -c "echo db:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass \
               && chmod 600 ~/.pgpass \
               && pg_dump --clean \
                           -Fc \
-                          -U parkeerrecht \
+                          -U parkeerrechten \
                           -h db -p 5432 \
-                          parkeerrecht > /tmp/backups/database.dump"
+                          parkeerrechten > /tmp/backups/database.dump"
