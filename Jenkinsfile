@@ -34,7 +34,7 @@ node {
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", ". -f parkeerrechten/Dockerfile")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", "parkeerrechten -f parkeerrechten/Dockerfile")
             image.push()
         }
 
