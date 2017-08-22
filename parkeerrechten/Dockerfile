@@ -26,7 +26,7 @@ COPY requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app /app
 COPY Makefile flake.cfg /app/
-COPY --from=gobuilder /go/src/db2csv /bin/db2csv
+COPY --from=gobuilder /go/src/db2csv/db2csv /bin/db2csv
 
 # Do the .jenkins directory dance to enable data imports:
 COPY .jenkins/import /.jenkins-import/
