@@ -50,7 +50,8 @@ services:
     command: >
       bash -c "echo db:5432:parkeerrecht:parkeerrecht:insecure > ~/.pgpass \
               && chmod 600 ~/.pgpass \
-              && pg_dump  -Fc \
+              && pg_dump --clean \
+                          -Fc \
                           -U parkeerrecht \
                           -h db -p 5432 \
-                          parkeerr > /tmp/backups/database.dump"
+                          parkeerrecht > /tmp/backups/database.dump"
