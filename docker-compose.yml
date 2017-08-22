@@ -22,10 +22,10 @@ services:
       DATABASE_PORT_OVERRIDE: 5432
     command: make runimport
 
-  sqlserverimporter:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${ENVIRONMENT}
-    volumes:
-      - /tmp/parkeerrechten/export:/tmp/export
+    #  sqlserverimporter:
+    #image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${ENVIRONMENT}
+    #volumes:
+    #  - /tmp/parkeerrechten/export:/tmp/export
 
   app:
     build:
