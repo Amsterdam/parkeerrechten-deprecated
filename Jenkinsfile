@@ -34,12 +34,8 @@ node {
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", ". -f Dockerfile")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", ". -f parkeerrechten/Dockerfile")
             image.push()
-
-//            def sqlserverimporter = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${env.BUILD_NUMBER}", "sqlserverimporter")
-//            sqlserverimporter.push()
-
         }
 
     }
@@ -55,11 +51,6 @@ if (BRANCH == "master") {
                 def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("acceptance")
-
-//                def sqlserverimporter = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${env.BUILD_NUMBER}", "sqlserverimporter")
-//                sqlserverimporter.push()
-//                sqlserverimporter.push("acceptance")
-
             }
         }
     }
