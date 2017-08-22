@@ -25,10 +25,10 @@ node {
     stage('Test') {
         tryStep "test", {
 
-            sh "docker-compose build && docker-compose up -d database && sleep 10 && docker-compose run -u root --rm app bash -c 'make flake test'"
+            sh "docker-compose -p parkeerrechten build && docker-compose -p parkeerrechten up -d database && sleep 10 && docker-compose -p parkeerrechten run -u root --rm app bash -c 'make flake test'"
 
         }, {
-            sh "docker-compose down"
+            sh "docker-compose -p parkeerrechten down"
         }
     }
 
@@ -69,10 +69,10 @@ if (BRANCH == "master") {
                 image.push("production")
                 image.push("latest")
 
-                def sqlserverimporter = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${env.BUILD_NUMBER}", "sqlserverimporter")
-                sqlserverimporter.push()
-                sqlserverimporter.push("production")
-                sqlserverimporter.push("latest")
+//                def sqlserverimporter = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${env.BUILD_NUMBER}", "sqlserverimporter")
+//                sqlserverimporter.push()
+//                sqlserverimporter.push("production")
+//                sqlserverimporter.push("latest")
 
             }
         }
