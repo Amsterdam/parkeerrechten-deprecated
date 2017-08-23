@@ -9,7 +9,7 @@ services:
 
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
-    liks:
+    links:
       - database
     environment:
       NPR_DATABASE_PASSWORD:
