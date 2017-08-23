@@ -12,6 +12,7 @@ services:
     liks:
       - database
     environment:
+      NPR_DATABASE_PASSWORD:
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
@@ -21,7 +22,7 @@ services:
       - /tmp/parkeerrechten/export:/tmp/export
     command: >
       bash -c "/app/.jenkins/docker-wait.sh && \
-               /app/.jenkins/import/import-placholder.sh"
+               /app/run_import.sh"
 
   db-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres

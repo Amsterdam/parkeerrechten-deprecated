@@ -24,6 +24,7 @@ RUN apt-get update \
 WORKDIR /app
 COPY requirements.txt /app
 RUN pip install --no-cache-dir -r requirements.txt
+COPY run_import.sh /app
 COPY app /app/
 COPY Makefile flake.cfg /app/
 COPY --from=gobuilder /go/src/db2csv/db2csv /bin/db2csv
