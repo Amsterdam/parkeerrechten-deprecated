@@ -6,6 +6,7 @@ set -u
 
 # Run our one Go binary (present in the /bin directory).
 ls -lh /tmp/export
+touch /tmp/export/text.txt
 
 db2csv -debug \
     -server ljccjhajab.database.windows.net\
