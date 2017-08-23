@@ -19,7 +19,9 @@ services:
       DATABASE_PORT_OVERRIDE: 5432
     volumes:
       - /tmp/parkeerrechten/export:/tmp/export
-    command: make runimport
+    command: >
+      bash -c "/app/.jenkins/docker-wait.sh && \
+               /app/.jenkins/import/import-placholder.sh"
 
   db-backup:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
