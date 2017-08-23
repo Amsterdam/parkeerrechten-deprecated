@@ -5,6 +5,8 @@ set -e
 set -u
 
 # Run our one Go binary (present in the /bin directory).
+ls -lh /tmp/export
+
 db2csv -debug \
     -server ljccjhajab.database.windows.net\
     -user usr_0363  \
