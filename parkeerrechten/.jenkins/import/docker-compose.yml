@@ -2,8 +2,6 @@ version: "3.0"
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-    ports:
-      - "5443:5432"
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
@@ -11,10 +9,9 @@ services:
 
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
-    links:
+    liks:
       - database
     environment:
-#      PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
