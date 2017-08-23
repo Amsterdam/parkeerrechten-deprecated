@@ -19,6 +19,6 @@ services:
       DATABASE_HOST_OVERRIDE: database
       DATABASE_PORT_OVERRIDE: 5432
     command: >
-      bash -c "app/.jenkins/docker-wait.sh \
-               && cd app/.jenkins/test/ \
+      bash -c "/app/.jenkins/docker-wait.sh \
+               && cd /app/.jenkins/test/ \
                && ./docker-test.sh"
