@@ -20,6 +20,29 @@ def run_import():
     check_import()
 
 
+def run_import_newstyle():
+    print('Testing import - new style.')
+    datafile = '/tmp/export/npr-data.csv'
+    create_table()
+
+    conn = psycopg2.connect(settings.PG_LOGIN)
+    cur = conn.cursor()
+    try:
+        f = open(datafile, encoding='latin-1')
+        cur.copy_from(f, 'parkeerrecht_2016_raw',  sep=";")
+        conn.commit()
+        os.remove(datafile)
+        print('Import csv successfull')
+    except Exception as e:
+        conn.rollback()
+        print('Error during create view. ', e)
+        raise e
+    finally:
+        cur.close()
+        conn.close()
+
+
+
 def retrieve_from_objectstore_and_import(filename):
     file = objectstore.copy_file_from_objectstore(
         container=container,
