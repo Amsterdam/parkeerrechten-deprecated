@@ -14,7 +14,7 @@ db2csv -debug \
     -user usr_0363  \
     -password ${NPR_DATABASE_PASSWORD} \
     -database ODP \
-    -query 'select TOP 10 * from VW_0363;'
+    -query 'select TOP 10 * from VW_0363;' \
     -output /tmp/export/npr-data.csv
 
 ls -lh /tmp/export/npr-data.csv
