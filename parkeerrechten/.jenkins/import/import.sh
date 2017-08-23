@@ -17,7 +17,6 @@ mkdir -p ${DIR}/backups
 
 
 dc up -d --build database
-sleep 20
 
 # Load data from NPR Database, save in /tmp/parkeererechten/export/output.csv
 dc run --rm importer
