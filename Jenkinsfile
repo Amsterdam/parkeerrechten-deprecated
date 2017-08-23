@@ -24,17 +24,16 @@ node {
 
     stage('Test') {
         tryStep "test", {
-
-            sh "docker-compose -p parkeerrechten build && docker-compose -p parkeerrechten up -d database && sleep 10 && docker-compose -p parkeerrechten run -u root --rm app bash -c 'make flake test'"
-
+            sh "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml && " +
+                    "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml -run --rm tests"
         }, {
-            sh "docker-compose -p parkeerrechten down"
+            sh "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml down"
         }
     }
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", "parkeerrechten -f parkeerrechten/Dockerfile")
+            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", "parkeerrechten")
             image.push()
         }
 
@@ -68,12 +67,6 @@ if (BRANCH == "master") {
                 image.pull()
                 image.push("production")
                 image.push("latest")
-
-//                def sqlserverimporter = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten_sqlserverimporter:${env.BUILD_NUMBER}", "sqlserverimporter")
-//                sqlserverimporter.push()
-//                sqlserverimporter.push("production")
-//                sqlserverimporter.push("latest")
-
             }
         }
     }

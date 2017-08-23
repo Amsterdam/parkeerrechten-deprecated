@@ -1,0 +1,24 @@
+version: "3.0"
+services:
+  database:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    environment:
+      POSTGRES_DB: parkeerrechten
+      POSTGRES_USER: parkeerrechten
+      POSTGRES_PASSWORD: insecure
+
+  tests:
+    build: ../../
+    links:
+      - database
+    environment:
+      PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
+      DATABASE_NAME: parkeerrechten
+      DATABASE_USER: parkeerrechten
+      DATABASE_PASSWORD: insecure
+      DATABASE_HOST_OVERRIDE: database
+      DATABASE_PORT_OVERRIDE: 5432
+    command: >
+      bash -c "app/.jenkins/docker-wait.sh \
+               && cd app/.jenkins/test/ \
+               && ./docker-test.sh"
