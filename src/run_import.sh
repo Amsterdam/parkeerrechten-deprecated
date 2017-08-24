@@ -21,7 +21,7 @@ ls -lh /tmp/export/npr-data.csv
 echo "Number of lines in CSV"
 wc -l /tmp/export/npr-data.csv
 
-python 'from parkeerrechten import importer;'
+python -c 'from parkeerrechten import importer;'
 
 
 # Include some refactored version of: from parkeerrechten import importer; importer.run_import() (in Make file)
