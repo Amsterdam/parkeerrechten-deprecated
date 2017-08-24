@@ -24,10 +24,10 @@ node {
 
     stage('Test') {
         tryStep "test", {
-            sh "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml build && " +
-                    "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml run -u root --rm tests"
+            sh "docker-compose -p parkeerrechten -f src/.jenkins/test/docker-compose.yml build && " +
+                    "docker-compose -p parkeerrechten -f src/.jenkins/test/docker-compose.yml run -u root --rm tests"
         }, {
-            sh "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml down"
+            sh "docker-compose -p parkeerrechten -f src/.jenkins/test/docker-compose.yml down"
         }
     }
 

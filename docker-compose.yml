@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: insecure
 
   app:
-    build: ./parkeerrechten
+    build: ./src
     links:
       - database
     environment:
