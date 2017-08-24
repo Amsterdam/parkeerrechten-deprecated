@@ -13,6 +13,7 @@ services:
       - database
     environment:
       NPR_DATABASE_PASSWORD:
+      PARKEREN_OBJECTSTORE_PASSWORD:
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
