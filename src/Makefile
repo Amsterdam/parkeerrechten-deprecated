@@ -3,7 +3,7 @@
 PYTHON = python3
 PYTEST = pytest
 PYTEST_OPTS ?= -p no:cacheprovider --capture=no --verbose
-TESTS ?= tests
+TESTS ?= parkeerrechten/tests
 
 test:
 	$(PYTEST) $(PYTEST_OPTS) $(TESTS)
