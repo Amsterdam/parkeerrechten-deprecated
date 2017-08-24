@@ -20,5 +20,4 @@ dc up -d --build database
 
 # Load data from NPR Database, save in /tmp/parkeererechten/export/output.csv
 dc run --rm importer
-
-# dc run --rm db-backup   # TBD
+dc run --rm db-backup
