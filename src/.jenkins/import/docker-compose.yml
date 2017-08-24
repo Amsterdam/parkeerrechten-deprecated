@@ -20,6 +20,8 @@ services:
       DATABASE_PORT_OVERRIDE: 5432
     volumes:
       - ./tmp/parkeerrechten/export:/tmp/export
+      - ./tmp/parkeerrechten/:/tmp/parkeerrechten
+      - ./tmp/parkeerrechten/export:/tmp/parkeerrechten/export
     command: >
       bash -c "/app/.jenkins/docker-wait.sh && \
                /app/run_import.sh"
