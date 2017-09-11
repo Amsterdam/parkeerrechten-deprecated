@@ -23,6 +23,9 @@ wc -l /tmp/export/npr-data.csv
 
 python -c 'from parkeerrechten import importer; importer.run_import()'
 
+chmod -R a+w /tmp/parkeerrechten/
+chmod -R a+w /tmp/export/
+
 
 # Include some refactored version of: from parkeerrechten import importer; importer.run_import() (in Make file)
 
