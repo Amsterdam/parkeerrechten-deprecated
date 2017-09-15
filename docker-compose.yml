@@ -3,20 +3,41 @@ services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
     ports:
-      - "5443:5432"
+      - "5437:5432"
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
+      BACKUP_FILE_BASENAME: TESTBACKUP
 
-  app:
-    build: ./src
+  importer:
+    build:
+      context: ./src/importer/
     links:
       - database
     environment:
-      PARKEREN_OBJECTSTORE_PASSWORD: ${PARKEREN_OBJECTSTORE_PASSWORD}
+      NPR_DATABASE_PASSWORD:
+      PARKEREN_OBJECTSTORE_PASSWORD:
+      BACKUP_FILE_BASENAME: TESTBACKUP
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
       DATABASE_HOST_OVERRIDE: database
-      DATABASE_PORT_OVERRIDE: 5432
+      #      DATABASE_PORT_OVERRIDE: 5432
+    # only during early dev!
+    #    volumes:
+    #      - ./src/importer/parkeerrechten:/app/parkeerrechten
+    volumes:
+            - ./backups:/tmp/backups
+    command: >
+      bash -c "set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
+               chmod 600 ~/.pgpass && \
+               bash -c /app/docker-wait.sh && \
+               cd /app/parkeerrechten && \
+               python run_import.py --startdate=20170801 --enddate=20170802 && \
+               python dump_database.py"
+               #               python run_import.py --startdate=20170801 --enddate=20170802 && \
+
+# python run_import.py --orphans &&
+# python run_import.py --startdate=20170831 &&
+

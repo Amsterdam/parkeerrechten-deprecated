@@ -6,7 +6,7 @@ import os
 from functools import lru_cache
 
 from swiftclient.client import Connection
-from .settings import OBJECTSTORE_CONFIG as config
+from settings import OBJECTSTORE_CONFIG as config
 
 log = logging.getLogger(__name__)
 
