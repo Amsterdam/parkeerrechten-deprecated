@@ -11,8 +11,7 @@ services:
       BACKUP_FILE_BASENAME: TESTBACKUP
 
   importer:
-    build:
-      context: ../src/
+    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
     links:
       - database
     environment:
