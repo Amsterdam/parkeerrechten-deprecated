@@ -169,11 +169,12 @@ def get_backed_up_batches():
     contents = objectstore._get_full_container_list(container)
 
     # filenames for dumps: <BASENAME>_YYYYMMDD.dump
-    pattern = re.escape(BASENAME) + '_(?P<date>\d{8})' + re.escape('.dump')
+    pattern = '(?P<date>\d{8})_' + re.escape(BASENAME) + re.escape('.dump')
     regexp = re.compile(pattern)
 
     dates = []
     for object_ in contents:
+        logger.debug('OBJECT_ In CONTENTS %s', object_['name'])
         m = regexp.match(object_['name'])
 
         try:

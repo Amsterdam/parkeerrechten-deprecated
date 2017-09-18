@@ -6,6 +6,7 @@ import sys
 import logging
 import os
 import subprocess
+import objectstore
 
 from sqlalchemy import create_engine, select, asc, distinct, Table, MetaData
 from sqlalchemy.sql import literal, text
@@ -99,10 +100,17 @@ def main(dp_conn):
         logger.info('Return code: %d', p.returncode)
         dp_conn.execute(drop_table, {'batch_name': batch_name})
 
+        # upload this stuff to the object store
+        objectstore.upload_file('parkeerrechten_pgdumps', dump_file)
+
+        os.remove(dump_file)
+
+
 
 if __name__ == '__main__':
     logger.info('Starting the NPR database dumper script')
     logger.info('Script was started with command: %s', sys.argv)
     with DP_ENGINE.connect() as dp_conn:
         main(dp_conn)
+
 

@@ -6,6 +6,7 @@ import os
 from functools import lru_cache
 
 from swiftclient.client import Connection
+from swiftclient.exceptions import ClientException
 from settings import OBJECTSTORE_CONFIG as config
 
 log = logging.getLogger(__name__)
@@ -71,3 +72,27 @@ def _get_full_container_list(container_name, **kwargs):
         _, page = get_conn().get_container(container_name, **kwargs)
         seed.extend(page)
     return seed
+
+
+def upload_file(container, file_path):
+    connection = get_conn()
+    path, file_name = os.path.split(file_path)
+
+    with open(file_path, 'rb') as f:
+        connection.put_object(
+            container,
+            file_name,
+            contents=f,
+            content_type='application/octet-stream'
+        )
+
+    try:
+        resp_headers = connection.head_object(container, file_name)
+    except ClientException as e:
+        if e.http_status == '404':
+            msg = 'File {} not uploaded'.format(file_path)
+        else:
+            msg = 'Error while checking existence of {}'.format(file_path)
+        return False, msg
+    else:
+        return True, 'File {} uploaded succesfully'.format(file_path)
