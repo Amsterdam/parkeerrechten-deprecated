@@ -16,28 +16,31 @@ services:
     links:
       - database
     environment:
+      # Following are secret, should be provided as environment variables.
       NPR_DATABASE_PASSWORD:
       PARKEREN_OBJECTSTORE_PASSWORD:
+      # BACKUP_FILE_BASENAME controls the base name for backup files in the object store
       BACKUP_FILE_BASENAME: TESTBACKUP
+      # BACKUP_N_DAYS_PER_RUN controls how many days worth of data is imported each time
+      BACKUP_N_DAYS_PER_RUN: 10
+      # Downloading data from the NPR database is done in batches BACKUP_BATCH_SIZE controls what size they are.
+      BACKUP_BATCH_SIZE: 50000
+      # Leave the DEBUGRUN environment variable empty to import full batches (not just 10 records)
+      DEBUGRUN: "TRUE"
+
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
       DATABASE_HOST_OVERRIDE: database
-      #      DATABASE_PORT_OVERRIDE: 5432
-    # only during early dev!
-    #    volumes:
-    #      - ./src/importer/parkeerrechten:/app/parkeerrechten
     volumes:
             - ./backups:/tmp/backups
     command: >
-      bash -c "set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
+      bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
                bash -c /app/docker-wait.sh && \
                cd /app/parkeerrechten && \
-               python run_import.py --startdate=20170801 --enddate=20170802 && \
-               python dump_database.py"
-               #               python run_import.py --startdate=20170801 --enddate=20170802 && \
-
-# python run_import.py --orphans &&
-# python run_import.py --startdate=20170831 &&
+               python run_import.py --orphans &&
+               python run_import.py --startdate=20170801 && \
+               python dump_database.py
+               chmod a+w /tmp/backups"
 

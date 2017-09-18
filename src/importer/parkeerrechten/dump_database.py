@@ -1,7 +1,7 @@
-# connect to database, retrieve batches
-# generate pg_dump commands
-# loop over the pg_dump commands, execute them to local /tmp dir
-# upload the file to the object store (files that are present are skipped)
+#!/usr/bin/env python3
+"""
+Dump local parkeerrechten database in daily batches.
+"""
 import sys
 import logging
 import os
@@ -9,14 +9,14 @@ import subprocess
 import objectstore
 
 from sqlalchemy import create_engine, select, asc, distinct, Table, MetaData
-from sqlalchemy.sql import literal, text
+from sqlalchemy.sql import text
 
 import settings
-from run_import import parse_date_string
+from namecheck import filter_batch_names
+from backup import get_backed_up_batches
 
 NPR_ENGINE = create_engine(settings.NPR_DB_URL)
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
-BASENAME = os.environ['BACKUP_FILE_BASENAME']
 
 
 LOG_FORMAT = '%(asctime)-15s - %(name)s - %(message)s'
@@ -25,13 +25,13 @@ logger = logging.getLogger('dump_database')
 
 
 def get_batches_in_local_db(dp_conn):
+    """See which batches are available in local (import) database"""
     md = MetaData()
     table = Table(
         'VW_0363_BACKUP', md, autoload=True, autoload_with=dp_conn)
 
     selection = (
         select([distinct(table.c.VER_BATCH_NAAM)])
-        .where(table.c.VER_BATCH_NAAM != literal('Leeg'))
         .order_by(asc(table.c.VER_BATCH_NAAM))
     )
 
@@ -40,28 +40,11 @@ def get_batches_in_local_db(dp_conn):
         row[0] for row in dp_conn.execute(selection).fetchall()]
 
     # validate that we have only dates as batch names
-    batch_names = []
-    rejected_batch_names = []
-    for b in unvalidated_batchnames:
-        if b == 'Leeg':
-            batch_names.append(b)
-            continue
-
-        try:
-            y, m, d = parse_date_string(b)
-        except ValueError:
-            logger.info('Cannot parse %s as date - skipping.', b)
-            rejected_batch_names.append(b)
-        else:
-            batch_names.append(b)
-
-    return batch_names, rejected_batch_names
+    return filter_batch_names(
+        unvalidated_batchnames, include_leeg=True)
 
 
-def main(dp_conn):
-    # connect to database, retrieve batches
-    batch_names, extra = get_batches_in_local_db(dp_conn)
-
+def back_up_batches(batch_names):
     # connect to local db, prepare views:
     create_table = text(
         """CREATE TABLE "dumptable" AS SELECT * FROM "VW_0363_BACKUP" WHERE """
@@ -75,14 +58,12 @@ def main(dp_conn):
         pass
 
     for batch_name in batch_names:
+        logger.debug('Backing up batch: %s', batch_name)
         dp_conn.execute(create_table, {'batch_name': batch_name})
-
         dump_file = os.path.join(
-            '/', 'tmp', 'backups', batch_name + '_' + BASENAME + '.dump')
-
+            '/', 'tmp', 'backups', batch_name + '_' + settings.BASENAME + '.dump')
         cmd = [
             'pg_dump',
-            '--clean',
             '--host=database',
             '--username=parkeerrechten',
             '--port=5432',
@@ -100,11 +81,35 @@ def main(dp_conn):
         logger.info('Return code: %d', p.returncode)
         dp_conn.execute(drop_table, {'batch_name': batch_name})
 
-        # upload this stuff to the object store
-        objectstore.upload_file('parkeerrechten_pgdumps', dump_file)
+        # upload to the object store
+        objectstore.upload_file(settings.OBJECT_STORE_CONTAINER, dump_file)
 
+        # remove local dump
         os.remove(dump_file)
 
+    # Throw away local database table
+    dp_conn.execute("""DROP TABLE "VW_0363_BACKUP";""")
+
+
+def main(dp_conn):
+    # check that we have any table dumping to do:
+    if not DP_ENGINE.has_table('VW_0363_BACKUP'):
+        logger.info('No table to back up, exiting.')
+        sys.exit(0)
+
+    # connect to database, retrieve batches
+    batch_names = get_batches_in_local_db(dp_conn)
+
+    # connect to object store and see which batches are available
+    backed_up = get_backed_up_batches(include_leeg=True)
+    logger.info('Backed-up batches present on the datastore %s', backed_up)
+
+    batch_names = list(set(batch_names) - set(backed_up))
+    if batch_names:
+        back_up_batches(batch_names)
+        logger.info('Made the required backups, exiting.')
+    else:
+        logger.info('No new backups need to be made, exiting.')
 
 
 if __name__ == '__main__':
@@ -112,5 +117,3 @@ if __name__ == '__main__':
     logger.info('Script was started with command: %s', sys.argv)
     with DP_ENGINE.connect() as dp_conn:
         main(dp_conn)
-
-
