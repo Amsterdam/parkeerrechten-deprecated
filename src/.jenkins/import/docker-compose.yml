@@ -12,7 +12,7 @@ services:
 
   importer:
     build:
-      context: ./src/
+      context: ../../
     links:
       - database
     environment:
