@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, select, asc, distinct, Table, MetaData
 from sqlalchemy.sql import literal
 
 import settings
-import datapunt
+import models
 import namecheck
 import backup
 
@@ -118,12 +118,16 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
 
     # Set up table in local database if needed (TODO: refactor)
     md = MetaData()
-    dp_table = datapunt.get_backup_table_def(md)
+    dp_table = models.get_backup_table_def(md)
     md.create_all(DP_ENGINE)
 
     it = batched_selection_iterator(npr_conn, selection, settings.BATCH_SIZE, 0)
     for i, rows in enumerate(it):
         dp_conn.execute(dp_table.insert(), rows)
+        logger.info(
+            'For batch %s we stored %d records (iteration no: %d).',
+            batch_name, len(rows), i
+        )
 
         if settings.DEBUG:
             break
