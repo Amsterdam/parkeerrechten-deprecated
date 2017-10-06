@@ -37,6 +37,6 @@ services:
     command: >
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
-               bash -c /app/docker-wait.sh"
+               /app/src/docker-wait.sh"
 
 # TODO: move all testing to pytest, possibly using a Makefile like other Datapunt projects.
