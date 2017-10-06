@@ -12,7 +12,7 @@ services:
 
   tests:
     build:
-      context: ../../
+      context: ../../../
     links:
       - database
     environment:
