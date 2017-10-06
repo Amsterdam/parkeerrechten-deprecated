@@ -10,10 +10,10 @@ import logging
 from sqlalchemy import create_engine, select, asc, distinct, Table, MetaData
 from sqlalchemy.sql import literal
 
-import settings
-import models
-import namecheck
-import backup
+from . import settings
+from . import models
+from . import namecheck
+from . import backup
 
 NPR_ENGINE = create_engine(settings.NPR_DB_URL)
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
@@ -133,7 +133,19 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
             break
 
 
-def main(npr_conn):
+def main():
+    t0 = time.time()
+    logger.info('Starting NPR parkeerrechten import script.')
+    logger.info('Script was called with: %s', sys.argv)
+
+    with NPR_ENGINE.connect() as npr_conn, DP_ENGINE.connect() as dp_conn:
+        main_2(npr_conn, dp_conn)
+    logger.info('Starting NPR parkeerrechten import script.')
+    dt = time.time() - t0
+    logger.info('The script took %.2f seconds to run', dt)
+
+
+def main_2(npr_conn, dp_conn):
     # Determine which batchnames we will be querying for:
     args = parse_args()
 
@@ -175,12 +187,5 @@ def main(npr_conn):
 
 if __name__ == '__main__':
     # Establish needed database connections (Datapunt local, NPR remote):
-    t0 = time.time()
-    logger.info('Starting NPR parkeerrechten import script.')
-    logger.info('Script was called with: %s', sys.argv)
+    main()
 
-    with NPR_ENGINE.connect() as npr_conn, DP_ENGINE.connect() as dp_conn:
-        main(npr_conn)
-    logger.info('Starting NPR parkeerrechten import script.')
-    dt = time.time() - t0
-    logger.info('The script took %.2f seconds to run', dt)

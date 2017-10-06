@@ -12,7 +12,7 @@ services:
 
   importer:
     build:
-      context: ./src/
+      context: .
     links:
       - database
     environment:
@@ -34,13 +34,13 @@ services:
       DATABASE_HOST_OVERRIDE: database
     volumes:
             - ./backups:/tmp/backups
+    # Dit moet anders:
     command: >
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
-               bash -c /app/docker-wait.sh && \
-               cd /app/parkeerrechten && \
-               python run_import.py --orphans &&
-               python run_import.py --startdate=20170801 && \
-               python dump_database.py && \
+               ls /app/src/ && \\
+               /app/src/docker-wait.sh && \
+               run_import --orphans && \
+               run_import --startdate=20170720  && \
+               dump_database  && \
                chmod a+w /tmp/backups"
-

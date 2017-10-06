@@ -6,14 +6,14 @@ import sys
 import logging
 import os
 import subprocess
-import objectstore
 
 from sqlalchemy import create_engine, select, asc, distinct, Table, MetaData
 from sqlalchemy.sql import text
 
-import settings
-from namecheck import filter_batch_names
-from backup import get_backed_up_batches
+from . import settings
+from . import objectstore
+from  .namecheck import filter_batch_names
+from  .backup import get_backed_up_batches
 
 NPR_ENGINE = create_engine(settings.NPR_DB_URL)
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
@@ -44,7 +44,7 @@ def get_batches_in_local_db(dp_conn):
         unvalidated_batchnames, include_leeg=True)
 
 
-def back_up_batches(batch_names):
+def back_up_batches(dp_conn, batch_names):
     # connect to local db, prepare views:
     create_table = text(
         """CREATE TABLE "dumptable" AS SELECT * FROM "VW_0363_BACKUP" WHERE """
@@ -91,7 +91,14 @@ def back_up_batches(batch_names):
     dp_conn.execute("""DROP TABLE "VW_0363_BACKUP";""")
 
 
-def main(dp_conn):
+def main():
+    logger.info('Starting the NPR database dumper script')
+    logger.info('Script was started with command: %s', sys.argv)
+    with DP_ENGINE.connect() as dp_conn:
+        main_2(dp_conn)
+
+
+def main_2(dp_conn):
     # check that we have any table dumping to do:
     if not DP_ENGINE.has_table('VW_0363_BACKUP'):
         logger.info('No table to back up, exiting.')
@@ -106,14 +113,12 @@ def main(dp_conn):
 
     batch_names = list(set(batch_names) - set(backed_up))
     if batch_names:
-        back_up_batches(batch_names)
+        back_up_batches(dp_conn, batch_names)
         logger.info('Made the required backups, exiting.')
     else:
         logger.info('No new backups need to be made, exiting.')
 
 
 if __name__ == '__main__':
-    logger.info('Starting the NPR database dumper script')
-    logger.info('Script was started with command: %s', sys.argv)
-    with DP_ENGINE.connect() as dp_conn:
-        main(dp_conn)
+    main()
+

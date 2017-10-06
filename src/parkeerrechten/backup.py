@@ -1,8 +1,8 @@
 import logging
 
-import objectstore
-from namecheck import is_batch_file, extract_batch_name
-import settings
+from . import objectstore
+from .namecheck import is_batch_file, extract_batch_name
+from . import settings
 
 LOG_FORMAT = '%(asctime)-15s - %(name)s - %(message)s'
 logging.basicConfig(format=LOG_FORMAT, level=logging.DEBUG)

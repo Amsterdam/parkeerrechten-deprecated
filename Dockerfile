@@ -1,6 +1,3 @@
-
-
-
 FROM amsterdam/docker_python:latest
 
 MAINTAINER datapunt.ois@amsterdam.nl
@@ -19,11 +16,12 @@ RUN apt-get update \
 
 
 WORKDIR /app
-COPY requirements.txt /app
-COPY docker-wait.sh /app
-RUN pip install --no-cache-dir -r requirements.txt
-COPY parkeerrechten /app/parkeerrechten/
+COPY . /app
+#COPY ./src/docker-wait.sh /app
+#COPY ./src/parkeerrechten /app/parkeerrechten/
+RUN pip install --no-cache-dir -e .
+
 
 # Do the .jenkins directory dance to enable data imports:
-COPY .jenkins/import /.jenkins-import/
+COPY ./src/.jenkins/import /.jenkins-import/
 # COPY .jenkins /app/.jenkins
