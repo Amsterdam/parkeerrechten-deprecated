@@ -3,7 +3,6 @@
 Import Data from NPR to local database.
 """
 import sys
-import argparse
 import time
 import logging
 
@@ -14,6 +13,7 @@ from . import settings
 from . import models
 from . import namecheck
 from . import backup
+from . import commandline
 
 NPR_ENGINE = create_engine(settings.NPR_DB_URL)
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
@@ -21,52 +21,6 @@ DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
 LOG_FORMAT = '%(asctime)-15s - %(name)s - %(message)s'
 logging.basicConfig(format=LOG_FORMAT, level=logging.DEBUG)
 logger = logging.getLogger('run_import')
-
-
-class ValidationError(Exception):
-    pass
-
-
-def check_args(args):
-    """
-    Validate that the dates, and date range are valid.
-    """
-    if args.startdate:
-        y, m, d = namecheck.parse_date_string(args.startdate)
-        if y < 2016:
-            raise namecheck.ValidationError('No data before 2016')
-
-    if args.enddate:
-        y, m, d = namecheck.parse_date_string(args.enddate)
-        if y < 2016:
-            raise ValidationError('No data before 2016')
-
-    if args.startdate and args.enddate:
-        if args.startdate > args.enddate:
-            raise ValidationError('startdate cannot be after enddate')
-
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        '--startdate', type=str,
-        help='Earliest batch to download specify as follows: YYYYMMDD')
-    parser.add_argument(
-        '--enddate', type=str,
-        help='Last batch to download specify as follows: YYYYMMDD')
-    parser.add_argument(
-        '--orphans', action='store_true',
-        help='Download records that have no batch name.')
-
-    args = parser.parse_args()
-    try:
-        check_args(args)
-    except(ValidationError, ValueError) as e:
-        logger.error('Commandline argument(s) are wrong')
-        raise e
-
-    return args
 
 
 def get_batch_names_in_npr(npr_conn):
@@ -138,16 +92,17 @@ def main():
     logger.info('Starting NPR parkeerrechten import script.')
     logger.info('Script was called with: %s', sys.argv)
 
+    # Establish needed database connections (Datapunt local, NPR remote):
     with NPR_ENGINE.connect() as npr_conn, DP_ENGINE.connect() as dp_conn:
-        main_2(npr_conn, dp_conn)
+        main_2(sys.argv, npr_conn, dp_conn)
     logger.info('Starting NPR parkeerrechten import script.')
     dt = time.time() - t0
     logger.info('The script took %.2f seconds to run', dt)
 
 
-def main_2(npr_conn, dp_conn):
+def main_2(raw_args, npr_conn, dp_conn):
     # Determine which batchnames we will be querying for:
-    args = parse_args()
+    args = commandline.parse_args(raw_args)
 
     # Check what is available on object store
     backed_up = backup.get_backed_up_batches(include_leeg=True)
@@ -186,6 +141,4 @@ def main_2(npr_conn, dp_conn):
 
 
 if __name__ == '__main__':
-    # Establish needed database connections (Datapunt local, NPR remote):
     main()
-

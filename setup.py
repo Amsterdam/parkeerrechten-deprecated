@@ -34,6 +34,7 @@ setup(
     extras_require={
         'test': [
             'pytest',
+            'pytest-flake8',
         ],
     }
 

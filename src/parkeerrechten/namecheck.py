@@ -3,13 +3,12 @@ Deal with batch names (in backup and on NPR).
 """
 import logging
 import time
-from os import environ
+
+from . settings import BACKUP_FILE_BASENAME
 
 LOG_FORMAT = '%(asctime)-15s - %(name)s - %(message)s'
 logging.basicConfig(format=LOG_FORMAT, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-_BASENAME = environ['BACKUP_FILE_BASENAME']
 
 
 def parse_date_string(s):
@@ -57,7 +56,7 @@ def is_batch_file(file_name, include_leeg):
     Retun True if batch file name is valid.
     """
     # TODO: name of function is wrong, refactor or rename!
-    end = '_' + _BASENAME + '.dump'
+    end = '_' + BACKUP_FILE_BASENAME + '.dump'
     if file_name.endswith(end):
         return is_batch_name(file_name[:-len(end)], include_leeg)
     else:
@@ -66,5 +65,5 @@ def is_batch_file(file_name, include_leeg):
 
 def extract_batch_name(file_name):
     """Extract batch name from a filename (only call with valid file names"""
-    end = '_' + _BASENAME + '.dump'
+    end = '_' + BACKUP_FILE_BASENAME + '.dump'
     return file_name[:-len(end)]
