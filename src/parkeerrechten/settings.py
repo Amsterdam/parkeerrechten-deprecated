@@ -14,6 +14,7 @@ NPR_DB_URL = URL(
     database='ODP',
 )
 NPR_TABLE = 'VW_0363'
+LOCAL_TABLE = 'VW_0363_BACKUP'
 
 # downstream object store
 _PARKEREN_OBJECTSTORE_PASSWORD = os.environ['PARKEREN_OBJECTSTORE_PASSWORD']
@@ -37,6 +38,13 @@ DATAPUNT_DB_URL = URL(
     database='parkeerrechten',
 )
 
+DATAPUNT_TEST_DB_URL = URL(
+    drivername='postgresql',
+    username='parkeerrechten',
+    password='insecure',
+    host='nprstandin',
+    database='parkeerrechten',
+)
 
 N_DAYS_PER_RUN = int(os.environ['BACKUP_N_DAYS_PER_RUN'])
 DEBUG = bool(os.environ['DEBUGRUN'])  # i.e. leave emtpy to get full runs

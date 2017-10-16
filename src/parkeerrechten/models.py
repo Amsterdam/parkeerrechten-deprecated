@@ -5,7 +5,7 @@ Queries for the Parkeerrechten database as hosted by Datapunt.
 from sqlalchemy import Table, Column, types
 
 
-def get_backup_table_def(metadata, table_name='VW_0363_BACKUP'):
+def get_backup_table_def(metadata, table_name):
     """
     Get SQLAlchemy core table definition to mirror that of NPR.
 
