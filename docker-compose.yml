@@ -8,7 +8,6 @@ services:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
-      BACKUP_FILE_BASENAME: TESTBACKUP
 
   importer:
     build:
