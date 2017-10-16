@@ -10,6 +10,7 @@ import random
 import uuid
 from hashlib import md5
 from collections import OrderedDict
+import csv
 
 import pandas as pd
 
@@ -81,7 +82,7 @@ COLUMNS_TO_RANDOMIZE_TIME = [
 
 def randomize_time(s):
     """Assumes datetime in YYYYMMDDHHMMSS format, randomizes HHMMSS part."""
-    return s[:-6] + '%02d%o2d%02d' % (
+    return s[:-6] + '%02d%02d%02d' % (
         random.randint(0, 23), random.randint(0, 59), random.randint(0, 59))
 
 
@@ -116,5 +117,5 @@ if __name__ == '__main__':
     print('Usage: python anonymize <input.csv> <output.csv> <number of rows>')
     assert len(sys.argv) == 4
     df = anonymize(sys.argv[1], int(sys.argv[3]))
-    df.to_csv(sys.argv[2], index=False)
+    df.to_csv(sys.argv[2], index=False, quoting=csv.QUOTE_MINIMAL)
     print('Done anonymizing %d records' % len(df))
