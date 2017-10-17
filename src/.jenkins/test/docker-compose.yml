@@ -14,7 +14,7 @@ services:
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
 
-  importer:
+  tests:
     build:
       context: ../../../
     links:
@@ -37,16 +37,8 @@ services:
       DATABASE_USER: parkeerrechten
       DATABASE_PASSWORD: insecure
       DATABASE_HOST_OVERRIDE: database
-    volumes:
-            - ./backups:/tmp/backups
-            - ./tests:/app/tests
-    # Dit moet anders:
     command: >
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
-               ls /app/src/ && \\
-               /app/src/docker-wait.sh && \
-               run_import --orphans && \
-               run_import --startdate=20170720  && \
-               dump_database  && \
-               chmod a+w /tmp/backups"
+               /app/src/docker-wait-test.sh && \
+               py.test"
