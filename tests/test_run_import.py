@@ -1,4 +1,5 @@
 import os
+import errno
 import csv
 import logging
 from unittest.mock import patch
@@ -147,6 +148,11 @@ def test_full_import_process(upload_mock, objectstore_mock, npr_conn, dp_conn):
 
     # Clean up the local database.
     _empty_out_local_db(dp_conn)
+    try:
+        os.makedirs('/tmp/backups/')
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
 
     # Copy records from the NPR stand in to the local database, the
     # repeated imports result in grabbing the full data set.
