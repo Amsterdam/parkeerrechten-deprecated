@@ -92,11 +92,12 @@ def _dump_database(dp_conn):
 
     # connect to database, retrieve batches
     batch_names = backup.get_batch_names_in_database(
-        dp_conn, settings.LOCAL_TABLE)
+        dp_conn, settings.LOCAL_TABLE, True)
+    logger.info('Batches in local database (to potentially back up): %s', batch_names)
 
     # connect to object store and see which batches are available
     backed_up = backup.get_batch_names_in_objectstore(include_leeg=True)
-    logger.info('Backed-up batches present on the datastoree %s', backed_up)
+    logger.info('Backed-up batches present on the datastoree: %s', backed_up)
 
     batch_names = list(set(batch_names) - set(backed_up))
     if batch_names:

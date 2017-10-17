@@ -63,7 +63,7 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
     for i, rows in enumerate(it):
         dp_conn.execute(dp_table.insert(), rows)
         logger.info(
-            'For {} records were stored for batch {} (iteration no: %d).'.format(
+            'For {} records were stored for batch {} (iteration no: {}).'.format(
                 len(rows), batch_name, i
             )
         )
@@ -80,11 +80,15 @@ def _run_import(raw_args, npr_conn, dp_conn):
 
     # Check what is available on object store and in the local database
     # waiting to be dumped and copied to objectstore.
-    backed_up = backup.get_batch_names_in_objectstore(include_leeg=True)
-    backed_up.extend(backup.get_batch_names_in_database(
+    on_objectstore = backup.get_batch_names_in_objectstore(include_leeg=True)
+    logger.info('Backed-up batches in data store: %s', on_objectstore)
+
+    in_local_db = backup.get_batch_names_in_database(
         dp_conn, settings.LOCAL_TABLE, include_leeg=True, require_table=False
-    ))
-    logger.info('Backed-up batches on datastore and in local db: %s', backed_up)
+    )
+    logger.info('Backed-up batches in local db: %s', in_local_db)
+
+    backed_up = on_objectstore + in_local_db
 
     # Check what is requested by the user:
     if args.orphans:

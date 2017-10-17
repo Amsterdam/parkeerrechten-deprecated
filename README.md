@@ -35,3 +35,16 @@ The backup scripts do the following:
   NPR at a rate of 10 days per import run. If there is no data to backup
   the scripts are smart enough to just give up (no configuration needed).
 
+### Running
+We provide a docker-comopse file that allows you to test the software without
+having access to the real data sources and back-up systems.
+
+```shell
+docker-compose -f src/.jenkins/test/docker-compose.yml run tests
+```
+
+To run the software in production you will need passwords to the NPR
+database and the object store. See the `docker-compose.yml` in the
+project root.
+
+
