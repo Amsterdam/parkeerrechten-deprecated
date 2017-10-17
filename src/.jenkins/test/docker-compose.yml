@@ -16,7 +16,7 @@ services:
 
   importer:
     build:
-      context: .
+      context: ../../../
     links:
       - database
       - nprstandin
