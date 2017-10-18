@@ -22,7 +22,7 @@ services:
       # Downloading data from the NPR database is done in batches BACKUP_BATCH_SIZE controls what size they are.
       BACKUP_BATCH_SIZE: 50000
       # Leave the DEBUGRUN environment variable empty to import full batches (not just 10 records)
-      DEBUGRUN: "TRUE"
+      DEBUGRUN:
 
       DATABASE_NAME: parkeerrechten
       DATABASE_USER: parkeerrechten
