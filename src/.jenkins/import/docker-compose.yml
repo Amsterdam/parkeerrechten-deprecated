@@ -16,7 +16,7 @@ services:
       NPR_DATABASE_PASSWORD:
       PARKEREN_OBJECTSTORE_PASSWORD:
       # BACKUP_FILE_BASENAME controls the base name for backup files in the object store
-      BACKUP_FILE_BASENAME: TESTBACKUP
+      BACKUP_FILE_BASENAME: "NPR_BACKUP"
       # BACKUP_N_DAYS_PER_RUN controls how many days worth of data is imported each time
       BACKUP_N_DAYS_PER_RUN: 10
       # Downloading data from the NPR database is done in batches BACKUP_BATCH_SIZE controls what size they are.
