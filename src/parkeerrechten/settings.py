@@ -47,6 +47,8 @@ DATAPUNT_TEST_DB_URL = URL(
 )
 
 N_DAYS_PER_RUN = int(os.environ['BACKUP_N_DAYS_PER_RUN'])
-DEBUG = bool(os.environ['DEBUGRUN'])  # i.e. leave emtpy to get full runs
+
+DEBUG = True if os.environ.get('DEBUGRUN', '') == 'TRUE' else False
+
 BATCH_SIZE = int(os.environ['BACKUP_BATCH_SIZE']) if not DEBUG else 10
 BASENAME = os.environ['BACKUP_FILE_BASENAME']
