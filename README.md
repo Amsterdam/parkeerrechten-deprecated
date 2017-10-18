@@ -5,7 +5,15 @@
   pipeline.
 * Note you need the NPR database password and the object store password for
   parkeren in your environment (see the docker-compose.yml file for more).
+* For local development dependencies can be installed with
+  pip install --no-cache-dir -e .[test]
 
+  But on MacOSX the freetds should be installed first with :
+  ```shell
+  brew install freetds@0.91
+  brew link --force freetds@0.91
+
+  ```
 
 ### Considerations / design decisions
 * We cannot backup the full NPR database overnight
