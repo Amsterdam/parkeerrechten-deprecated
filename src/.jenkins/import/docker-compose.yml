@@ -2,13 +2,10 @@ version: "3.0"
 services:
   database:
     image: build.datapunt.amsterdam.nl:5000/atlas/postgres
-    ports:
-      - "5437:5432"
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
-      BACKUP_FILE_BASENAME: TESTBACKUP
 
   importer:
     image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
@@ -36,10 +33,9 @@ services:
     command: >
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
-               bash -c /app/docker-wait.sh && \
-               cd /app/parkeerrechten && \
-               python run_import.py --orphans &&
-               python run_import.py --startdate=20170801 && \
-               python dump_database.py && \
+               /app/src/docker-wait.sh && \
+               run_import --orphans &&
+               run_import --startdate=20170801 && \
+               dump_database && \
                chmod a+w /tmp/backups"
 
