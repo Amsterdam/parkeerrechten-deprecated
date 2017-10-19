@@ -30,7 +30,7 @@ def _pg_dump(filename):
         '--port=5432',
         '--no-password',  # use .pgpass (or fail)
         '--format=c',
-        '--table="dumptable"',
+        '--table="BACKUP_VW_0363"',
         '--exclude-table=auth*',
         '--dbname=parkeerrechten',
     ]
@@ -47,10 +47,10 @@ def _back_up_batches(dp_conn, batch_names):
     # connect to local db, prepare views:
     create_table = text(
         """
-        CREATE TABLE "dumptable" AS SELECT * FROM "{}" WHERE
+        CREATE TABLE "BACKUP_VW_0363" AS SELECT * FROM "{}" WHERE
         "VER_BATCH_NAAM" = :batch_name """.format(settings.LOCAL_TABLE)
     )
-    drop_table = text("""DROP TABLE "dumptable"; """)
+    drop_table = text("""DROP TABLE "BACKUP_VW_0363"; """)
 
     # Clean up left-overs from previous failed runs.
     try:
