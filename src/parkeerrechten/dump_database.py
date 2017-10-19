@@ -83,8 +83,6 @@ def _dump_database(dp_conn):
     """
     Check for back-ups to perform and run database dump process.
     """
-    logger.info('Starting the NPR database dumper script')
-    logger.info('Script was started with command: %s', sys.argv)
     # check that we have any table dumping to do:
     if not DP_ENGINE.has_table(settings.LOCAL_TABLE):
         logger.info('No table to back up, exiting.')
@@ -111,10 +109,11 @@ def main():
     """
     Script entrypoint, dump the local database and upload to object store.
     """
+    logger.info('Starting the NPR database dumper script')
+    logger.info('Script was started with command: %s', sys.argv)
     with DP_ENGINE.connect() as dp_conn:
         _dump_database(dp_conn)
 
 
 if __name__ == '__main__':
     main()
-

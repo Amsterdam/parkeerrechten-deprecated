@@ -63,7 +63,7 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
     for i, rows in enumerate(it):
         dp_conn.execute(dp_table.insert(), rows)
         logger.info(
-            'For {} records were stored for batch {} (iteration no: {}).'.format(
+            '{} records were stored for batch {} (iteration no: {}).'.format(
                 len(rows), batch_name, i
             )
         )
@@ -74,9 +74,8 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
 
 def _run_import(raw_args, npr_conn, dp_conn):
     # Determine which batchnames we will be querying for:
+    logger.info('Checking command line arguments ...')
     args = commandline.parse_args(raw_args)
-    logger.info('Starting NPR parkeerrechten import script.')
-    logger.info('Script was called with: %s', raw_args)
 
     # Check what is available on object store and in the local database
     # waiting to be dumped and copied to objectstore.
@@ -128,6 +127,7 @@ def main():
     Script entrypoint, run full import process.
     """
     logger.info('Starting NPR parkeerrechten import script.')
+    logger.info('Script was called with: %s', sys.argv)
     t0 = time.time()
     # Establish needed database connections (Datapunt local, NPR remote):
     with NPR_ENGINE.connect() as npr_conn, DP_ENGINE.connect() as dp_conn:

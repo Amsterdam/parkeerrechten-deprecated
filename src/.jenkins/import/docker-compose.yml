@@ -35,7 +35,7 @@ services:
                chmod 600 ~/.pgpass && \
                /app/src/docker-wait.sh && \
                run_import --orphans &&
-               run_import --startdate=20170801 && \
+               run_import && \
                dump_database && \
                chmod a+w /tmp/backups"
 
