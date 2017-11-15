@@ -67,3 +67,12 @@ def extract_batch_name(file_name):
     """Extract batch name from a filename (only call with valid file names"""
     end = '_' + BACKUP_FILE_BASENAME + '.dump'
     return file_name[:-len(end)]
+
+
+def file_name_for_batch_name(batch_name):
+    """
+    Generate a backup filename from a batch_name.
+    """
+    if not is_batch_name(batch_name, include_leeg=True):
+        raise ValueError('{} is not a batch name'.format(batch_name))
+    return batch_name + '_' + BACKUP_FILE_BASENAME + '.dump'

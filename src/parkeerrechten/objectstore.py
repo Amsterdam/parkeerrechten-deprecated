@@ -36,7 +36,7 @@ def get_conn():
 
 def copy_file_from_objectstore(container, file_name, download_dir):
     os.makedirs(download_dir, exist_ok=True)
-    destination = download_dir + file_name
+    destination = os.path.join(download_dir, file_name)
     log.info("Download file {} to {}".format(file_name, destination))
     os.makedirs(os.path.dirname(destination), exist_ok=True)
     with open(destination, 'wb') as f:

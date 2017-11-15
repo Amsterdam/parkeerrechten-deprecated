@@ -21,6 +21,7 @@ setup(
         'console_scripts': [
             'run_import = parkeerrechten.run_import:main',
             'dump_database = parkeerrechten.dump_database:main',
+            'restore_database = parkeerrechten.restore_database:main'
         ],
     },
     install_requires=[

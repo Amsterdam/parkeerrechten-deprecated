@@ -1,6 +1,4 @@
 # noqa
-import pytest
-
 from parkeerrechten import namecheck
 from parkeerrechten import settings
 
@@ -46,3 +44,7 @@ def test_is_batch_file():
 def test_extract_batch_name():
     batch_name = namecheck.extract_batch_name(TEST_BATCH_FILE)
     assert batch_name == TEST_BATCH_NAME
+
+
+def test_file_name_for_batch():
+    assert namecheck.file_name_for_batch_name(TEST_BATCH_NAME) == TEST_BATCH_FILE
