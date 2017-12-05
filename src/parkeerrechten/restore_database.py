@@ -11,7 +11,7 @@ import os
 import subprocess
 
 from sqlalchemy import create_engine
-#  from sqlalchemy.sql import text
+from sqlalchemy.sql import text
 
 from . import settings
 from . import objectstore
@@ -81,15 +81,19 @@ def _restore_database(raw_args, dp_conn):
 
             os.remove(dump_file)
 
+    _erase_fields(dp_conn, settings.TARGET_TABLE, settings.SENSITIVE_FIELDS)
+
     table_content = backup.get_batch_names_in_database(
         dp_conn, settings.TARGET_TABLE, include_leeg=True, require_table=False)
 
     logging.debug('Present after restore: %s', str(table_content))
 
 
-def _erase_fields(dp_conn, fields):
+def _erase_fields(dp_conn, table_name, fields):
     for field_name in fields:
-        pass  # update <TABLE_NAME> set <MY_COLUMN> = null
+        # update <TABLE_NAME> set <MY_COLUMN> = null
+        sql = '''update "{}" set "{}" = null;'''.format(table_name, field_name)
+        dp_conn.execute(text(sql))
 
 
 def main():

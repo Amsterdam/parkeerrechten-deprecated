@@ -170,3 +170,13 @@ def test_full_import_process_plus_restore(
         '''SELECT COUNT(*) FROM "{}";'''.format(settings.TARGET_TABLE)
     )).fetchall()
     assert r[0][0] == 100
+    logging.debug('RESULTS: %s' % r)
+
+    # --- check that we did really erase the "KENM_RECHTV_INT" field ---
+    for sf in settings.SENSITIVE_FIELDS:
+        logging.debug('Checking field is empty: %s' % sf)
+        r = dp_conn.execute(text(
+            '''SELECT DISTINCT "{}" FROM "{}";'''.format(sf, settings.TARGET_TABLE)
+        )).fetchall()
+        logging.debug('Field values: %s' % r)
+        assert r[0][0] == None
