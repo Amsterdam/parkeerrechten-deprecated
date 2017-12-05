@@ -47,8 +47,7 @@ def _pg_restore(file_name):
         file_name
     ]
     logger.info('Running command: %s', cmd)
-    with open(file_name, 'wb') as outfile:
-        p = subprocess.Popen(cmd, stdout=outfile)
+    p = subprocess.Popen(cmd)
     p.wait()
     logger.info('Return code: %d', p.returncode)
 
@@ -68,14 +67,16 @@ def _restore_database(dp_conn):
     batch_names = backup.get_batch_names_in_objectstore(include_leeg=True)
 
     # loop: download file, restore etc...
+    logging.info('Starting restore')
+    logging.info(
+        '\n\nERRORS MESSAGES ABOUT PRE-EXISTING TABLE EXPECTED BELOW - HARMLESS\n\n')
     with TemporaryDirectory() as temp_dir:
         for i, batch_name in enumerate(batch_names):
-            if i == 2:  # debug, early exit ...
-                break
             file_name = namecheck.file_name_for_batch_name(batch_name)
             dump_file = objectstore.copy_file_from_objectstore(
                 settings.OBJECT_STORE_CONTAINER, file_name, temp_dir)
-            _pg_restore(dump_file)
+
+            _pg_restore(os.path.join(temp_dir, dump_file))
 
             os.remove(dump_file)
 
@@ -83,6 +84,11 @@ def _restore_database(dp_conn):
         dp_conn, BACKUP_TABLE_NAME, include_leeg=True, require_table=False)
 
     logging.debug('Present after restore: %s', str(table_content))
+
+
+def _erase_fields(dp_conn, fields):
+    for field_name in fields:
+        pass  # update <TABLE_NAME> set <MY_COLUMN> = null
 
 
 def main():

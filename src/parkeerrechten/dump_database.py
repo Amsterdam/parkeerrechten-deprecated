@@ -42,7 +42,7 @@ def _pg_dump(filename):
     logger.info('Return code: %d', p.returncode)
 
 
-def _back_up_batches(dp_conn, batch_names):
+def _back_up_batches(dp_conn, batch_names, remove_dumps):
     """For each batch in database run a database dump."""
     # connect to local db, prepare views:
     create_table = text(
@@ -57,6 +57,12 @@ def _back_up_batches(dp_conn, batch_names):
         dp_conn.execute(drop_table)
     except:
         pass
+
+    if remove_dumps:
+        logger.info('Removing database dumps from local storage immediately.')
+    else:
+        logger.info('Not removing database dumps from local storage.')
+
 
     # Go over the batches in the local database and dump them.
     for batch_name in batch_names:
@@ -73,13 +79,14 @@ def _back_up_batches(dp_conn, batch_names):
         objectstore.upload_file(settings.OBJECT_STORE_CONTAINER, dump_file)
 
         # Remove local dump.
-        os.remove(dump_file)
+        if remove_dumps:
+            os.remove(dump_file)
 
     # Throw away local database table
     dp_conn.execute("""DROP TABLE "{}";""".format(settings.LOCAL_TABLE))
 
 
-def _dump_database(dp_conn):
+def _dump_database(dp_conn, remove_dumps=True):
     """
     Check for back-ups to perform and run database dump process.
     """
@@ -99,7 +106,7 @@ def _dump_database(dp_conn):
 
     batch_names = list(set(batch_names) - set(backed_up))
     if batch_names:
-        _back_up_batches(dp_conn, batch_names)
+        _back_up_batches(dp_conn, batch_names, remove_dumps=remove_dumps)
         logger.info('Made the required backups, exiting.')
     else:
         logger.info('No new backups need to be made, exiting.')

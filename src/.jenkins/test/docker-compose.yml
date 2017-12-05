@@ -41,4 +41,4 @@ services:
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
                /app/src/docker-wait-test.sh && \
-               py.test"
+               py.test -s"

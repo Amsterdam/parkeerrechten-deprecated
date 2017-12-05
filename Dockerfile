@@ -19,7 +19,8 @@ WORKDIR /app
 COPY . /app
 #COPY ./src/docker-wait.sh /app
 #COPY ./src/parkeerrechten /app/parkeerrechten/
-RUN pip install --no-cache-dir -e .[test]
+# RUN pip install --no-cache-dir -e .[test]
+RUN pip install --no-cache-dir .[test]
 
 
 # Do the .jenkins directory dance to enable data imports:
