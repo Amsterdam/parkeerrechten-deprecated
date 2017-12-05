@@ -22,7 +22,6 @@ from . import backup
 from . import namecheck
 
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
-BACKUP_TABLE_NAME = 'BACKUP_VW_0363'  # must match name in database dump script (!)
 
 LOG_FORMAT = '%(asctime)-15s - %(name)s - %(message)s'
 logging.basicConfig(format=LOG_FORMAT, level=logging.DEBUG)
@@ -42,7 +41,7 @@ def _pg_restore(file_name):
         '--port=5432',
         '--no-password',  # use .pgpass (or fail)
         '--format=c',
-        '--table=' + BACKUP_TABLE_NAME,
+        '--table={}'.format(settings.TARGET_TABLE),
         '--dbname=parkeerrechten',
         file_name
     ]
@@ -58,7 +57,7 @@ def _restore_database(dp_conn):
     """
     # Check that we are working from an empty table
     table_content = backup.get_batch_names_in_database(
-        dp_conn, BACKUP_TABLE_NAME, include_leeg=True, require_table=False)
+        dp_conn, settings.TARGET_TABLE, include_leeg=True, require_table=False)
     if table_content:
         logging.error('Table we are restoring to is not empty, exiting.')
         return
@@ -81,7 +80,7 @@ def _restore_database(dp_conn):
             os.remove(dump_file)
 
     table_content = backup.get_batch_names_in_database(
-        dp_conn, BACKUP_TABLE_NAME, include_leeg=True, require_table=False)
+        dp_conn, settings.TARGET_TABLE, include_leeg=True, require_table=False)
 
     logging.debug('Present after restore: %s', str(table_content))
 

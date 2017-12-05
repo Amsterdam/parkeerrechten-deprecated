@@ -167,6 +167,6 @@ def test_full_import_process_plus_restore(
     objectstore_mock.side_effect = list_local_database_dumps
 
     r = dp_conn.execute(text(
-        '''SELECT COUNT(*) FROM "{}";'''.format('BACKUP_VW_0363')  # must match dump_database.py!
+        '''SELECT COUNT(*) FROM "{}";'''.format(settings.TARGET_TABLE)
     )).fetchall()
     assert r[0][0] == 100

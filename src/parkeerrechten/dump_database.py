@@ -30,7 +30,7 @@ def _pg_dump(filename):
         '--port=5432',
         '--no-password',  # use .pgpass (or fail)
         '--format=c',
-        '--table="BACKUP_VW_0363"',
+        '--table="{}"'.format(settings.TARGET_TABLE),
         '--exclude-table=auth*',
         '--dbname=parkeerrechten',
     ]
@@ -47,10 +47,12 @@ def _back_up_batches(dp_conn, batch_names, remove_dumps):
     # connect to local db, prepare views:
     create_table = text(
         """
-        CREATE TABLE "BACKUP_VW_0363" AS SELECT * FROM "{}" WHERE
-        "VER_BATCH_NAAM" = :batch_name """.format(settings.LOCAL_TABLE)
+        CREATE TABLE "{}" AS SELECT * FROM "{}" WHERE
+        "VER_BATCH_NAAM" = :batch_name """.format(
+            settings.TARGET_TABLE, settings.LOCAL_TABLE
+        )
     )
-    drop_table = text("""DROP TABLE "BACKUP_VW_0363"; """)
+    drop_table = text("""DROP TABLE "{}"; """.format(settings.TARGET_TABLE))
 
     # Clean up left-overs from previous failed runs.
     try:
@@ -62,7 +64,6 @@ def _back_up_batches(dp_conn, batch_names, remove_dumps):
         logger.info('Removing database dumps from local storage immediately.')
     else:
         logger.info('Not removing database dumps from local storage.')
-
 
     # Go over the batches in the local database and dump them.
     for batch_name in batch_names:
@@ -118,6 +119,7 @@ def main():
     """
     logger.info('Starting the NPR database dumper script')
     logger.info('Script was started with command: %s', sys.argv)
+    logger.info('Dumping to table: {}'.format(settings.TARGET_TABLE))
     with DP_ENGINE.connect() as dp_conn:
         _dump_database(dp_conn)
 
