@@ -2,12 +2,9 @@
 """
 Download parkeerrechten database dumps from the objectstore and restore them.
 """
-# TODO: check assumption: it is safe to use same database name / settings as before
-# because we are in a fresh container / different import process.
 # TODO: mark some traffic as intra data center ...
-# TODO: drop db and then restore ...
 
-#  import sys
+import sys
 import logging
 from tempfile import TemporaryDirectory
 import os
@@ -20,6 +17,7 @@ from . import settings
 from . import objectstore
 from . import backup
 from . import namecheck
+from . import commandline
 
 DP_ENGINE = create_engine(settings.DATAPUNT_DB_URL)
 
@@ -51,10 +49,12 @@ def _pg_restore(file_name):
     logger.info('Return code: %d', p.returncode)
 
 
-def _restore_database(dp_conn):
+def _restore_database(raw_args, dp_conn):
     """
     Restore the individual pg_dump files from the object store.
     """
+    args = commandline.parse_args(raw_args, include_orphans_option=False)
+
     # Check that we are working from an empty table
     table_content = backup.get_batch_names_in_database(
         dp_conn, settings.TARGET_TABLE, include_leeg=True, require_table=False)
@@ -64,6 +64,8 @@ def _restore_database(dp_conn):
 
     # Check the object store for backups
     batch_names = backup.get_batch_names_in_objectstore(include_leeg=True)
+    batch_names = namecheck.filter_batch_names_by_date(
+        batch_names, args.startdate, args.enddate)
 
     # loop: download file, restore etc...
     logging.info('Starting restore')
@@ -92,7 +94,7 @@ def _erase_fields(dp_conn, fields):
 
 def main():
     with DP_ENGINE.connect() as dp_conn:
-        _restore_database(dp_conn)
+        _restore_database(sys.argv[1:], dp_conn)
 
 
 if __name__ == '__main__':

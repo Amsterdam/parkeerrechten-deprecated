@@ -75,7 +75,7 @@ def get_and_store_batch(npr_conn, dp_conn, batch_name):
 def _run_import(raw_args, npr_conn, dp_conn):
     # Determine which batchnames we will be querying for:
     logger.info('Checking command line arguments ...')
-    args = commandline.parse_args(raw_args)
+    args = commandline.parse_args(raw_args, include_orphans_option=True)
 
     # Check what is available on object store and in the local database
     # waiting to be dumped and copied to objectstore.

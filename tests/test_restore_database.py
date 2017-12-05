@@ -163,7 +163,7 @@ def test_full_import_process_plus_restore(
     # empyt out local DB, re-use connection to restore to that db
     _empty_out_local_db(dp_conn)
 
-    restore_database._restore_database(dp_conn)
+    restore_database._restore_database([], dp_conn)
     objectstore_mock.side_effect = list_local_database_dumps
 
     r = dp_conn.execute(text(

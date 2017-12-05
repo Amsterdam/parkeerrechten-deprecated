@@ -39,3 +39,38 @@ services:
                dump_database && \
                chmod a+w /tmp/backups"
 
+  # Near verbatim copy of importer service, only the command is diffent and the NPR_DATABASE_PASSWORD
+  # env variable is not needed (because the second step only rebuilds a database starting from the
+  # object store).
+  importer2:
+    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
+    #build: ../../..
+    links:
+      - database
+    environment:
+      # Following are secret, should be provided as environment variables.
+      NPR_DATABASE_PASSWORD:
+      PARKEREN_OBJECTSTORE_PASSWORD:
+      # BACKUP_FILE_BASENAME controls the base name for backup files in the object store
+      BACKUP_FILE_BASENAME: "NPR_BACKUP"
+      # BACKUP_N_DAYS_PER_RUN controls how many days worth of data is imported each time
+      BACKUP_N_DAYS_PER_RUN: 50
+      # Downloading data from the NPR database is done in batches BACKUP_BATCH_SIZE controls what size they are.
+      BACKUP_BATCH_SIZE: 50000
+      # Leave the DEBUGRUN environment variable empty to import full batches (not just 10 records)
+      DEBUGRUN:
+
+      DATABASE_NAME: parkeerrechten
+      DATABASE_USER: parkeerrechten
+      DATABASE_PASSWORD: insecure
+      DATABASE_HOST_OVERRIDE: database
+    volumes:
+            - ./backups:/tmp/backups
+            - ../../..:/app
+    command: >
+      bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
+               chmod 600 ~/.pgpass && \
+               /app/src/docker-wait.sh && \
+               restore_database --startdate=20171125 --enddate=20171128 && \
+               chmod a+w /tmp/backups"
+

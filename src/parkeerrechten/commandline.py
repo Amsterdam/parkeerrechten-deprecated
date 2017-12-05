@@ -35,7 +35,7 @@ def check_date_args(args):
             raise ValidationError('startdate cannot be after enddate')
 
 
-def parse_args(raw_args):
+def parse_args(raw_args, include_orphans_option):
     """
     Parse the commandline options to this script.
     """
@@ -48,9 +48,12 @@ def parse_args(raw_args):
     parser.add_argument(
         '--enddate', type=str,
         help='Last batch to download specify as follows: YYYYMMDD')
-    parser.add_argument(
-        '--orphans', action='store_true',
-        help='Download records that have no batch name.')
+
+    if include_orphans_option:
+        # The restore script restores everything - so option not needed.
+        parser.add_argument(
+            '--orphans', action='store_true',
+            help='Download records that have no batch name.')
 
     # Parse command line arguments, check their values.
     args = parser.parse_args(raw_args)
