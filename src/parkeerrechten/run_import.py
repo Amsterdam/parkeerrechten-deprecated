@@ -7,7 +7,7 @@ import time
 import logging
 
 from sqlalchemy import create_engine, select, asc, Table, MetaData
-from sqlalchemy.sql import literal
+from sqlalchemy.sql import literal, text
 
 from . import settings
 from . import models
@@ -114,8 +114,8 @@ def _run_import(raw_args, npr_conn, dp_conn):
         get_and_store_batch(npr_conn, dp_conn, batch_name)
 
     if batch_names:
-        result = dp_conn.execute(
-            'select count(*) from "VW_0363_BACKUP"').fetchall()
+        sql = '''select count(*) from "{}"'''.format(settings.LOCAL_TABLE)
+        result = dp_conn.execute(text(sql)).fetchall()
         logger.info(
             'There are now %s records in the local postgres db', result[0])
     else:
