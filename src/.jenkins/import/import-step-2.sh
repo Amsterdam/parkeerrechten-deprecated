@@ -17,3 +17,4 @@ mkdir -p ${DIR}/backups
 
 dc build
 dc run --rm importer2
+dc run --rm db-backup

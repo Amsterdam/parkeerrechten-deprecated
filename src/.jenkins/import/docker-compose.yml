@@ -74,3 +74,19 @@ services:
                restore_database --startdate=20171125 --enddate=20171128 && \
                chmod a+w /tmp/backups"
 
+  db-backup:
+    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    links:
+      - database:db
+    volumes:
+      - ./backups:/tmp/backups
+    command: >
+      bash -c "echo db:5432:monumenten:monumenten:insecure > ~/.pgpass \
+              && chmod 600 ~/.pgpass \
+              && pg_dump --clean \
+                          -Fc \
+                          -U parkeerrechten \
+                          -h db -p 5432 \
+                          parkeerrechten > /tmp/backups/database.dump"
+
+
