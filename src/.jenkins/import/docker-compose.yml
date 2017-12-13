@@ -81,7 +81,7 @@ services:
     volumes:
       - ./backups:/tmp/backups
     command: >
-      bash -c "echo db:5432:monumenten:monumenten:insecure > ~/.pgpass \
+      bash -c "echo db:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass \
               && chmod 600 ~/.pgpass \
               && pg_dump --clean \
                           -Fc \
