@@ -71,7 +71,7 @@ services:
       bash -c "set -x && set -e && echo database:5432:parkeerrechten:parkeerrechten:insecure > ~/.pgpass &&\
                chmod 600 ~/.pgpass && \
                /app/src/docker-wait.sh && \
-               restore_database --startdate=20171125 --enddate=20171128 && \
+               restore_database && \
                chmod a+w /tmp/backups"
 
   db-backup:
