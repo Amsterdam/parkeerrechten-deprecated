@@ -1,7 +1,7 @@
 version: "3.0"
 services:
   database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
@@ -75,7 +75,7 @@ services:
                chmod a+w /tmp/backups"
 
   db-backup:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     links:
       - database:db
     volumes:

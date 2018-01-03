@@ -1,14 +1,14 @@
 version: "3.0"
 services:
   database:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
 
   nprstandin:
-    image: build.datapunt.amsterdam.nl:5000/atlas/postgres
+    image: amsterdam/postgres
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
