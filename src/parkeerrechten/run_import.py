@@ -33,7 +33,8 @@ def batched_selection_iterator(connection, selection, batch_size, offset=0):
 
         # For quick test runs.
         if not rows:
-            raise StopIteration
+            break
+
         yield rows
 
         offset += batch_size
