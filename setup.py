@@ -29,8 +29,8 @@ setup(
         'pymssql',  # requires FreeTDS (non-python dependency)
         'psycopg2-binary',
 
-        'python_swiftclient==3.2.0',
-        'python-keystoneclient==3.8.0',
+        'python_swiftclient',
+        'python-keystoneclient',
     ],
     extras_require={
         'test': [

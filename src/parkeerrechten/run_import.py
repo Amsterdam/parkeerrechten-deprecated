@@ -31,13 +31,13 @@ def batched_selection_iterator(connection, selection, batch_size, offset=0):
         s = selection.limit(batch_size).offset(offset)
         rows = connection.execute(s).fetchall()
 
+        offset += batch_size
+
         # For quick test runs.
         if not rows:
             break
 
         yield rows
-
-        offset += batch_size
 
 
 def get_and_store_batch(npr_conn, dp_conn, batch_name):
