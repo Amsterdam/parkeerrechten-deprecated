@@ -26,6 +26,7 @@ node {
         tryStep "test", {
             sh "src/.jenkins/test/test.sh"
         }
+    }
 
     stage("Build image") {
         tryStep "build", {
@@ -66,5 +67,4 @@ if (BRANCH == "master") {
             }
         }
     }
-
 }
