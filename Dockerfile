@@ -9,7 +9,6 @@ EXPOSE 8000
 RUN apt-get update \
 	&& apt-get install -y \
 		netcat \
-		freetds-dev \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& adduser --system datapunt
