@@ -75,7 +75,7 @@ services:
                chmod a+w /tmp/backups"
 
   db-backup:
-    image: amsterdam/postgres
+    image: amsterdam/postgres9.6
     links:
       - database:db
     volumes:
