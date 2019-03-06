@@ -10,6 +10,7 @@ dc() {
 	docker-compose -p parkeerrechtentest -f ${DIR}/docker-compose.yml $*
 }
 
+dc down
 dc rm -f
 dc pull
 dc build
