@@ -15,6 +15,7 @@ trap 'dc kill ; dc down ; dc rm -f' EXIT
 rm -rf ${DIR}/backups
 mkdir -p ${DIR}/backups
 
+dc down -v
 dc rm -f
 dc pull
 dc build
