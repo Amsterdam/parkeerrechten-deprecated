@@ -8,13 +8,13 @@ EXPOSE 8000
 
 RUN apt-get update \
 	&& apt-get install -y \
-		freetds-bin \
-		freetds-common \
 		freetds-dev \
 		netcat \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& adduser --system datapunt
+RUN pip install --user Cython \
+	&& pip install --user --no-binary pymssql pymssql	
 
 
 WORKDIR /app

@@ -26,8 +26,6 @@ setup(
     },
     install_requires=[
         'SQLAlchemy',
-        'cython',
-        'pymssql==2.1.1',  # requires FreeTDS (non-python dependency)
         'psycopg2-binary',
 
         'python_swiftclient',
