@@ -14,7 +14,7 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& adduser --system datapunt
 RUN pip install --user Cython \
-	&& pip install --user --no-binary pymssql pymssql	
+	&& pip install --user --no-binary pymssql pymssql==2.1.1
 
 
 WORKDIR /app
