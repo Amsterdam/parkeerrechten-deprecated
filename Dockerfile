@@ -16,6 +16,8 @@ RUN apt-get update \
 RUN pip install --user Cython \
 	&& pip install --user --no-binary pymssql pymssql
 
+# force DTS protocol version to 8
+COPY ./src/conf/freetds.conf /etc/freetds/freetds.conf
 
 WORKDIR /app
 COPY . /app
