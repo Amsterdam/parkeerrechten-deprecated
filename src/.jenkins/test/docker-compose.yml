@@ -1,14 +1,14 @@
 version: "3.0"
 services:
   database:
-    image: amsterdam/postgres9.6
+    image: amsterdam/postgres11
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
       POSTGRES_PASSWORD: insecure
 
   nprstandin:
-    image: amsterdam/postgres9.6
+    image: amsterdam/postgres11
     environment:
       POSTGRES_DB: parkeerrechten
       POSTGRES_USER: parkeerrechten
