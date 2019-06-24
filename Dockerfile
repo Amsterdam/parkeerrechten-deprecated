@@ -1,6 +1,6 @@
-FROM amsterdam/python:latest
+FROM amsterdam/python3.6
 
-MAINTAINER datapunt.ois@amsterdam.nl
+MAINTAINER datapunt@amsterdam.nl
 
 ENV PYTHONUNBUFFERED 1
 EXPOSE 8000
