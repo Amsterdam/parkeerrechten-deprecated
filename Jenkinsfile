@@ -22,7 +22,7 @@ node {
         checkout scm
     }
 
-    stage('Test') {
+    stage("Test") {
         tryStep "test", {
             sh "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml build && " +
                     "docker-compose -p parkeerrechten -f parkeerrechten/.jenkins/test/docker-compose.yml run -u root --rm tests"
@@ -33,10 +33,9 @@ node {
 
     stage("Build image") {
         tryStep "build", {
-            def image = docker.build("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}", "parkeerrechten")
+            def image = docker.build("repo.data.amsterdam.nl/datapunt/parkeerrechten:${env.BUILD_NUMBER}", "--build-arg http_proxy=${JENKINS_HTTP_PROXY_STRING} --build-arg https_proxy=${JENKINS_HTTP_PROXY_STRING} parkeerrechten")
             image.push()
         }
-
     }
 }
 
@@ -47,7 +46,7 @@ if (BRANCH == "master") {
     node {
         stage('Push acceptance image') {
             tryStep "image tagging", {
-                def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}")
+                def image = docker.image("repo.data.amsterdam.nl/datapunt/parkeerrechten:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("acceptance")
             }
@@ -63,7 +62,7 @@ if (BRANCH == "master") {
     node {
         stage('Push production image') {
             tryStep "image tagging", {
-                def image = docker.image("build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${env.BUILD_NUMBER}")
+                def image = docker.image("repo.data.amsterdam.nl/datapunt/parkeerrechten:${env.BUILD_NUMBER}")
                 image.pull()
                 image.push("production")
                 image.push("latest")
