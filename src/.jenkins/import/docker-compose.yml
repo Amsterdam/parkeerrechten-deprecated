@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: insecure
 
   importer:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
+    image: repo.data.amsterdam.nl/datapunt/parkeerrechten:${ENVIRONMENT}
     links:
       - database
     environment:
@@ -43,7 +43,7 @@ services:
   # env variable is not needed (because the second step only rebuilds a database starting from the
   # object store).
   importer2:
-    image: build.datapunt.amsterdam.nl:5000/datapunt/parkeerrechten:${ENVIRONMENT}
+    image: repo.data.amsterdam.nl/datapunt/parkeerrechten:${ENVIRONMENT}
     #build: ../../..
     links:
       - database
