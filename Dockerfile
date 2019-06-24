@@ -1,4 +1,4 @@
-FROM amsterdam/python3.6
+FROM amsterdam/python_pg11
 
 MAINTAINER datapunt@amsterdam.nl
 
