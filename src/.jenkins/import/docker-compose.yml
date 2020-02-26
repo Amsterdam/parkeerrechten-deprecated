@@ -43,7 +43,7 @@ services:
   # env variable is not needed (because the second step only rebuilds a database starting from the
   # object store).
   importer2:
-    image: r${DOCKER_REGISTRY_HOST}/datapunt/parkeerrechten:${ENVIRONMENT}
+    image: ${DOCKER_REGISTRY_HOST}/datapunt/parkeerrechten:${ENVIRONMENT}
     #build: ../../..
     links:
       - database
