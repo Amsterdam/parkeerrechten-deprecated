@@ -1,0 +1,41 @@
+version: "3.5"
+
+volumes:
+  data:
+
+services:
+  database: 
+    image: postgres:11
+    environment:
+      - POSTGRES_DB=dev
+      - POSTGRES_USER=dev
+      - POSTGRES_PASSWORD=dev
+
+  app: &app
+    image: repo.data.amsterdam.nl/datapunt/parkeren-csvdumper:${VERSION:-latest}
+    build:
+      context: .
+      target: app
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_NAME=dev
+      - DATABASE_USER=dev
+      - DATABASE_PASSWORD=dev
+      - TENANT_USER
+      - TENANT_ID
+      - OBJECTSTORE_USER
+      - OBJECTSTORE_PASSWORD
+      - PYTHONBREAKPOINT
+
+    volumes:
+      - ./src:/src
+      - data:/data
+
+    depends_on:
+      - database
+
+  dev:
+    <<: *app
+    build:
+      context: .
+      target: dev
